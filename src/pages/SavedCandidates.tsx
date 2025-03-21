@@ -2,6 +2,29 @@
 import { useState, useEffect } from 'react';
 import Candidate from '../interfaces/Candidate.interface';
 
+/**
+ * Component to display and manage saved candidates.
+ *
+ * This component fetches saved candidates from localStorage and displays them in a table.
+ * Users can delete candidates from the list, which updates both the state and localStorage.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SavedCandidates />
+ * )
+ *
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @typedef {Object} Candidate
+ * @property {string} login - The login username of the candidate.
+ * @property {string} avatar_url - The URL of the candidate's avatar image.
+ * @property {string} name - The name of the candidate.
+ * @property {string} location - The location of the candidate.
+ * @property {string} email - The email address of the candidate.
+ * @property {string} company - The company where the candidate works.
+ * @property {string} bio - The bio of the candidate.
+ */
 const SavedCandidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 

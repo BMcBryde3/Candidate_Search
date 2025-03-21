@@ -3,6 +3,18 @@ import { IoAddCircle, IoRemoveCircle } from 'react-icons/io5';
 import { searchGithub, searchGithubUser } from '../api/API';
 import Candidate from '../interfaces/Candidate.interface';
 
+/**
+ * CandidateSearch component fetches and displays GitHub user information.
+ * It allows users to save or reject a candidate.
+ *
+ * @component
+ * @example
+ * return (
+ *   <CandidateSearch />
+ * )
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 const CandidateSearch = () => {
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -63,21 +75,19 @@ const CandidateSearch = () => {
 
   return (
 
-    <div
-      className="vh-100 d-flex flex-column justify-content-center align-items-center text-white">
+    <div className="vh-100 d-flex flex-column justify-content-center align-items-center text-white container">
       <h1 className="mb-4 text-center text-white">Candidate Search</h1>
-      {/* Error or Loading */}
       {isLoading && <p>Loading...</p>}
       {error && <p className="text-danger">{error}</p>}
 
-      {/* Candidate Card */}
+      {/* GitHub User Card */}
       {candidate && (
-        <div className="card text-left">
-          <img src={candidate.avatar_url} className="card-img-top" alt={`${candidate.name}'s avatar`} />
-          <div className="card-body">
-              <h5 className="card-title">
-              <span className="fw-bold"> {candidate.name}</span> <span className="fw-bold">({candidate.login})</span>
-            </h5>
+        <div className="card text-left"style={{ width: "18rem"}}>
+          <img src={candidate.avatar_url || '/path/to/default-avatar.png'} className="card-img-top" style={{ borderTopLeftRadius: "20px", borderTopRightRadius: "20px", width: '100%', height: 'auto' }}/>
+          <div className="card-body bg-dark text-white" style={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px", }}>
+              <h4 className="card-title">
+              <span className="fw-bold"> {candidate.name}</span> <span className="fw-bold">{candidate.login}</span>
+            </h4>
             <p className="card-text">
               <strong>Location:</strong> {candidate.location || "No location available."}
             </p>
@@ -95,9 +105,9 @@ const CandidateSearch = () => {
         </div>
       )}
       {candidate && (
-        <div className="d-flex mt-4" >
-          <IoRemoveCircle  style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(255, 0, 0)'}} onClick={() => rejectCandidate?.()} />
-          <IoAddCircle style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(0, 255, 123)'}} onClick={() => saveCandidate?.()} />
+        <div className="d-flex mt-4 justify-content-between" style={{ width: '100%' }}>
+          <IoRemoveCircle className="me-auto" style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(255, 0, 0)' }} onClick={() => rejectCandidate?.()} />
+          <IoAddCircle className="ms-auto" style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(0, 255, 123)' }} onClick={() => saveCandidate?.()} />
         </div>
       )}
     </div>
