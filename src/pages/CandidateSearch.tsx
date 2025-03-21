@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { IoAddCircle, IoRemoveCircle } from 'react-icons/io5';
 import { searchGithub, searchGithubUser } from '../api/API';
 import Candidate from '../interfaces/Candidate.interface';
 
@@ -21,9 +22,14 @@ const CandidateSearch = () => {
       }
 
       const login = candidates[0].login;
+
+      console.log('login', login);  
+
       try {
         const candidateData = await searchGithubUser(login);
-        setCandidate(candidateData);
+        const {location, email, company, bio, avatar_url} = candidateData;
+        setCandidate({login, name: candidateData.name, location, email, company, bio, avatar_url});
+        console.log(setCandidate);
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           setError(`Candidate with username ${candidates[0].login} not found.`);
@@ -37,6 +43,10 @@ const CandidateSearch = () => {
       setIsLoading(false);
     }
   };
+
+  const rejectCandidate = () => {
+    fetchCandidate();
+  };  
 
   const saveCandidate = () => {
     if (!candidate) return;
@@ -62,31 +72,18 @@ const CandidateSearch = () => {
 
       {/* Candidate Card */}
       {candidate && (
-        <div className="card text-left" style={{ width: "18rem", border: "none", background: "none", }}>
-          <img
-            src={candidate.avatar_url || '/path/to/default-avatar.png'}  // Fallback URL if avatar_url is missing
-            className="card-img-top"
-            alt={`${candidate.name}'s avatar`}
-            style={{ borderTopLeftRadius: "20px", borderTopRightRadius: "20px", width: '100%', height: 'auto' }} // Ensure image is responsive
-          />
-          <div className="card-body bg-dark text-white"
-            style={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px", }}>
-
-            <h5 className="card-title">
+        <div className="card text-left">
+          <img src={candidate.avatar_url} className="card-img-top" alt={`${candidate.name}'s avatar`} />
+          <div className="card-body">
+              <h5 className="card-title">
               <span className="fw-bold"> {candidate.name}</span> <span className="fw-bold">({candidate.login})</span>
             </h5>
             <p className="card-text">
               <strong>Location:</strong> {candidate.location || "No location available."}
             </p>
             <p className="card-text">
-              <strong>Email:</strong>{" "}
-              {candidate.email ? (
-                <a href={`mailto:${candidate.email}`} className="text-info">
-                  {candidate.email}
-                </a>
-              ) : (
-                "No email available."
-              )}
+              <strong>Email:</strong>{" "}{candidate.email ? (
+                <a href={`mailto:${candidate.email}`} className="text-info"> {candidate.email}</a>) : ("No email available.")}
             </p>
             <p className="card-text">
               <strong>Company:</strong> {candidate.company || "No company available."}
@@ -97,31 +94,10 @@ const CandidateSearch = () => {
           </div>
         </div>
       )}
-
-      {/* Buttons */}
       {candidate && (
-        <div
-          className="d-flex mt-4"
-          style={{
-            gap: "10rem", // Adjust the value to your preference
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-danger rounded-circle p-2"
-            style={{ width: "5rem", height: "5rem", display: "flex", justifyContent: "center", alignItems: "center" }}
-            onClick={fetchCandidate}
-          >
-            <span style={{ color: "black", fontSize: "3rem", fontWeight: "bold", }}>-</span>
-          </button>
-          <button
-            type="button"
-            className="btn btn-success rounded-circle p-2"
-            style={{ width: "5rem", height: "5rem", display: "flex", justifyContent: "center", alignItems: "center" }}
-            onClick={saveCandidate}
-          >
-            <span style={{ color: "black", fontSize: "3rem", fontWeight: "bold", }}>+</span>
-          </button>
+        <div className="d-flex mt-4" >
+          <IoRemoveCircle  style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(255, 0, 0)'}} onClick={() => rejectCandidate?.()} />
+          <IoAddCircle style={{ fontSize: '50px', cursor: 'pointer', color: 'rgb(0, 255, 123)'}} onClick={() => saveCandidate?.()} />
         </div>
       )}
     </div>
